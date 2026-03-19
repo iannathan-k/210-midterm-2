@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <ctime>
 using namespace std;
 
 // COMSC-210 | Midterm 2 | Ian Kusmiantoro
@@ -234,13 +235,18 @@ public:
 };
 
 int main() {
-    cout << MIN_NR + MIN_LS + MAX_NR + MAX_LS;  // dummy statement to avoid compiler warning
+    srand(time(0)); // seed the rng
 
     DoublyLinkedList* store_queue = new DoublyLinkedList();
     ifstream fin;
     int length = 0;
 
     fin.open("names.txt");
+
+    if (!fin.good()) {
+        cout << "Error opening file" << endl;
+        exit(1);
+    }
 
     // Store Opens
     
@@ -265,8 +271,9 @@ int main() {
         int probability;
         
         probability = rand() % 100 + 1;
-        if (probability <= 40) {
-            cout << "\t" << store_queue->getNodeDataAt(0) << " is served" << endl;
+        if (probability <= 40 && length > 0) {
+            cout << "\t" << store_queue->getNodeDataAt(1);
+            cout << " is served" << endl;
             store_queue->pop_front();
             length--;
         }
@@ -274,27 +281,31 @@ int main() {
         probability = rand() % 100 + 1;
         if (probability <= 60) {
             fin >> name;
-            cout << "\t" << name << " joined the line" << endl;
+            cout << "\t" << name;
+            cout << " joined the line" << endl;
             store_queue->push_back(name);
             length++;
         }
 
         probability = rand() % 100 + 1;
-        if (probability <= 20) {
-            cout << "\t" << store_queue->getNodeDataAt(length - 1) << " (at the rear) left the line" << endl;
+        if (probability <= 20 && length > 0) {
+            cout << "\t" << store_queue->getNodeDataAt(length);
+            cout << " (at the rear) left the line" << endl;
             store_queue->pop_back();
             length--;
         }
 
         probability = rand() % 100 + 1;
-        if (probability <= 10) {
+        // Bounds checking because nobody can leave if theres nobody in the line
+        if (probability <= 10 && length > 0) {
             // This particular requirement is a bit ambiguous, as I don't know whether
             // It's a 10% chance someone leaves, or a 10% chance for each person to leave
             // But I interpret it to be a 10% for a random person to leave
 
             // add 1 because delete_pos starts with 1 instead of 0
             int random_person = rand() % length + 1;
-            cout << "\t" << store_queue->getNodeDataAt(random_person) << " left the line" << endl;
+            cout << "\t" << store_queue->getNodeDataAt(random_person);
+            cout << " left the line" << endl;
             store_queue->delete_pos(random_person);
             length--;
         }
@@ -302,13 +313,18 @@ int main() {
         probability = rand() % 100 + 1;
         if (probability <= 10) {
             fin >> name;
-            cout << "\t" << name << " (VIP) joins the front of the line" << endl;
+            cout << "\t" << name; 
+            cout << " (VIP) joins the front of the line" << endl;
             store_queue->push_front(name + " (VIP)");
             length++;
         }
 
         cout << "\tResulting line: ";
         store_queue->print();
+    }
+
+    if (fin.is_open()) {
+        fin.close();
     }
     
     return 0;
