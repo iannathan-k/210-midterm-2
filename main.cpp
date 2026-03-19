@@ -183,6 +183,7 @@ public:
             delete temp;
         }
     }
+
     void print() {
         Node* current = head;
         if (!current) {
@@ -208,6 +209,28 @@ public:
         }
         cout << endl;
     }
+
+    string getNodeDataAt(int pos) {
+        Node* current = head;
+        if (!current) {
+            cout << "List is empty." << endl;
+            return;
+        }
+
+        for (int i = 0; i < pos && current; i++) {
+            current = current->next;
+        } 
+
+        return current->data;
+    }
+
+    string getNodeDataAtTail() {
+        if (!tail) {
+            cout << "List is empty." << endl;
+            return;
+        }
+        return tail->data;
+    }
 };
 
 int main() {
@@ -229,11 +252,29 @@ int main() {
     // Next 20 minutes
 
     for (int i = 0; i < 20; i++) {
+        string name;
         int probability = rand() % 100 + 1;
         if (probability <= 40) {
+            cout << store_queue->getNodeDataAt(0) << " is served";
             store_queue->pop_front();
         }
-        if (probability)
+        if (probability <= 60) {
+            fin >> name;
+            cout << name << " joined the line" << endl;
+            store_queue->push_back(name);
+        }
+        if (probability <= 20) {
+            cout << store_queue->getNodeDataAtTail() << " left the line";
+            store_queue->pop_back();
+        }
+        if (probability <= 10) {
+            // This ask is ambiguous
+        }
+        if (probability <= 10) {
+            fin >> name;
+            cout << name << " (VIP) joins the front of the line" << endl;
+            store_queue->push_front(name + " (VIP)");
+        }
     }
     
     return 0;
