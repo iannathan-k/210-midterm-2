@@ -210,26 +210,26 @@ public:
         cout << endl;
     }
 
+    // getNodeDataAt() fetches the name held by the node at postion n
+    // parameters: int pos - position of the node who's data is to be fetched
+    // returns: string - the data held by the node at position n
     string getNodeDataAt(int pos) {
         Node* current = head;
-        if (!current) {
+        if (!head) {
             cout << "List is empty." << endl;
             return "";
         }
 
-        for (int i = 0; i < pos && current; i++) {
+        for (int i = 1; i < pos && current; i++) {
             current = current->next;
         } 
 
-        return current->data;
-    }
-
-    string getNodeDataAtTail() {
-        if (!tail) {
-            cout << "List is empty." << endl;
+        if (!current) {
+            cout << "Index out of bounds." << endl;
             return "";
         }
-        return tail->data;
+
+        return current->data;
     }
 };
 
@@ -248,12 +248,12 @@ int main() {
     for (int i = 0; i < 5; i++) {
         string name;
         fin >> name;
-        cout << name << " joined the line" << endl;
+        cout << "\t" << name << " joined the line" << endl;
         store_queue->push_back(name);
         length++;
     }
 
-    cout << "Resulting line: ";
+    cout << "\tResulting line: ";
     store_queue->print();
 
     // Next 20 minutes
@@ -266,7 +266,7 @@ int main() {
         
         probability = rand() % 100 + 1;
         if (probability <= 40) {
-            cout << store_queue->getNodeDataAt(0) << " is served" << endl;
+            cout << "\t" << store_queue->getNodeDataAt(0) << " is served" << endl;
             store_queue->pop_front();
             length--;
         }
@@ -274,14 +274,16 @@ int main() {
         probability = rand() % 100 + 1;
         if (probability <= 60) {
             fin >> name;
-            cout << name << " joined the line" << endl;
+            cout << "\t" << name << " joined the line" << endl;
             store_queue->push_back(name);
+            length++;
         }
 
         probability = rand() % 100 + 1;
         if (probability <= 20) {
-            cout << store_queue->getNodeDataAtTail() << " (at the rear) left the line" << endl;
+            cout << "\t" << store_queue->getNodeDataAt(length - 1) << " (at the rear) left the line" << endl;
             store_queue->pop_back();
+            length--;
         }
 
         probability = rand() % 100 + 1;
@@ -290,17 +292,22 @@ int main() {
             // It's a 10% chance someone leaves, or a 10% chance for each person to leave
             // But I interpret it to be a 10% for a random person to leave
 
-
+            // add 1 because delete_pos starts with 1 instead of 0
+            int random_person = rand() % length + 1;
+            cout << "\t" << store_queue->getNodeDataAt(random_person) << " left the line" << endl;
+            store_queue->delete_pos(random_person);
+            length--;
         }
 
         probability = rand() % 100 + 1;
         if (probability <= 10) {
             fin >> name;
-            cout << name << " (VIP) joins the front of the line" << endl;
+            cout << "\t" << name << " (VIP) joins the front of the line" << endl;
             store_queue->push_front(name + " (VIP)");
+            length++;
         }
 
-        cout << "Resulting line: ";
+        cout << "\tResulting line: ";
         store_queue->print();
     }
     
