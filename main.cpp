@@ -234,13 +234,15 @@ public:
     }
 };
 
-string pickRandomName(const vector<string>* name_list) {
-    int rand_index = rand() % name_list->size();
-    return name_list->at(rand_index);
-}
+string pickRandomName(vector<string>*);
 
 int main() {
     srand(time(0)); // seed the rng
+    const int MAX_PROBABILITY = 100;
+    const int STARTING_LINE = 5;
+    const int START_TIME = 1;
+    const int END_TIME = 20;
+    const int 
 
     DoublyLinkedList* store_queue = new DoublyLinkedList();
     ifstream fin;
@@ -249,10 +251,14 @@ int main() {
     // Random name picker machine 9000
     vector<string>* name_list = new vector<string>();
     fin.open("names.txt");
-    if (fin.good()) {
+    if (fin.good()) { // In case the opening fails and such
         string temp_name;
         while (fin >> temp_name) {
             name_list->push_back(temp_name);
+        }
+
+        if (fin.is_open()) {
+            fin.close();
         }
     } else {
         cout << "Error opening file" << endl;
@@ -262,7 +268,7 @@ int main() {
     // Store Opens
     
     cout << "STORE OPENS" << endl;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < STARTING_LINE; i++) {
         string name = pickRandomName(name_list);
         cout << "\t" << name << " joined the line" << endl;
         store_queue->push_back(name);
@@ -274,13 +280,13 @@ int main() {
 
     // Next 20 minutes
 
-    for (int i = 1; i <= 20; i++) {
+    for (int i = START_TIME; i <= END_TIME; i++) {
         cout << "TIME STEP #" << i << endl;
 
         string name;
         int probability;
         
-        probability = rand() % 100 + 1;
+        probability = rand() % MAX_PROBABILITY + 1;
         if (probability <= 40 && length > 0) {
             cout << "\t" << store_queue->getNodeDataAt(1);
             cout << " is served" << endl;
@@ -288,7 +294,7 @@ int main() {
             length--;
         }
 
-        probability = rand() % 100 + 1;
+        probability = rand() % MAX_PROBABILITY + 1;
         if (probability <= 60) {
             name = pickRandomName(name_list);
             cout << "\t" << name;
@@ -297,7 +303,7 @@ int main() {
             length++;
         }
 
-        probability = rand() % 100 + 1;
+        probability = rand() % MAX_PROBABILITY + 1;
         if (probability <= 20 && length > 0) {
             cout << "\t" << store_queue->getNodeDataAt(length);
             cout << " (at the rear) left the line" << endl;
@@ -305,7 +311,7 @@ int main() {
             length--;
         }
 
-        probability = rand() % 100 + 1;
+        probability = rand() % MAX_PROBABILITY + 1;
         // Bounds checking because nobody can leave if theres nobody in the line
         if (probability <= 10 && length > 0) {
             // This particular requirement is a bit ambiguous, as I don't know whether
@@ -320,7 +326,7 @@ int main() {
             length--;
         }
 
-        probability = rand() % 100 + 1;
+        probability = rand() % MAX_PROBABILITY + 1;
         if (probability <= 10) {
             name = pickRandomName(name_list);
             cout << "\t" << name; 
@@ -332,10 +338,16 @@ int main() {
         cout << "\tResulting line: ";
         store_queue->print();
     }
-
-    if (fin.is_open()) {
-        fin.close();
-    }
     
     return 0;
+}
+
+// pickRandomName() picks a random name from the name list, then removes it so it won't be picked again
+// parameters: vector<string>* name_list - pointer to the vector holding all the names
+// returns: string - a randomly chosen name
+string pickRandomName(vector<string>* name_list) {
+    int rand_index = rand() % name_list->size(); // Pick a random index inside the vector
+    string name = name_list->at(rand_index); 
+    name_list->erase(name_list->begin() + rand_index); // Erase the chosen name
+    return name;
 }
