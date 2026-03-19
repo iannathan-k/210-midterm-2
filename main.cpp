@@ -214,7 +214,7 @@ public:
         Node* current = head;
         if (!current) {
             cout << "List is empty." << endl;
-            return;
+            return "";
         }
 
         for (int i = 0; i < pos && current; i++) {
@@ -227,7 +227,7 @@ public:
     string getNodeDataAtTail() {
         if (!tail) {
             cout << "List is empty." << endl;
-            return;
+            return "";
         }
         return tail->data;
     }
@@ -238,43 +238,70 @@ int main() {
 
     DoublyLinkedList* store_queue = new DoublyLinkedList();
     ifstream fin;
+    int length = 0;
 
     fin.open("names.txt");
 
     // Store Opens
     
+    cout << "STORE OPENS" << endl;
     for (int i = 0; i < 5; i++) {
         string name;
         fin >> name;
+        cout << name << " joined the line" << endl;
         store_queue->push_back(name);
+        length++;
     }
+
+    cout << "Resulting line: ";
+    store_queue->print();
 
     // Next 20 minutes
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 1; i <= 20; i++) {
+        cout << "TIME STEP #" << i << endl;
+
         string name;
-        int probability = rand() % 100 + 1;
+        int probability;
+        
+        probability = rand() % 100 + 1;
         if (probability <= 40) {
-            cout << store_queue->getNodeDataAt(0) << " is served";
+            cout << store_queue->getNodeDataAt(0) << " is served" << endl;
             store_queue->pop_front();
+            length--;
         }
+
+        probability = rand() % 100 + 1;
         if (probability <= 60) {
             fin >> name;
             cout << name << " joined the line" << endl;
             store_queue->push_back(name);
         }
+
+        probability = rand() % 100 + 1;
         if (probability <= 20) {
-            cout << store_queue->getNodeDataAtTail() << " left the line";
+            cout << store_queue->getNodeDataAtTail() << " (at the rear) left the line" << endl;
             store_queue->pop_back();
         }
+
+        probability = rand() % 100 + 1;
         if (probability <= 10) {
-            // This ask is ambiguous
+            // This particular requirement is a bit ambiguous, as I don't know whether
+            // It's a 10% chance someone leaves, or a 10% chance for each person to leave
+            // But I interpret it to be a 10% for a random person to leave
+
+
         }
+
+        probability = rand() % 100 + 1;
         if (probability <= 10) {
             fin >> name;
             cout << name << " (VIP) joins the front of the line" << endl;
             store_queue->push_front(name + " (VIP)");
         }
+
+        cout << "Resulting line: ";
+        store_queue->print();
     }
     
     return 0;
