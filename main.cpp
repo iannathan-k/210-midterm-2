@@ -234,6 +234,11 @@ public:
     }
 };
 
+string pickRandomName(const vector<string>* name_list) {
+    int rand_index = rand() % name_list->size();
+    return name_list->at(rand_index);
+}
+
 int main() {
     srand(time(0)); // seed the rng
 
@@ -241,9 +246,15 @@ int main() {
     ifstream fin;
     int length = 0;
 
+    // Random name picker machine 9000
+    vector<string>* name_list = new vector<string>();
     fin.open("names.txt");
-
-    if (!fin.good()) {
+    if (fin.good()) {
+        string temp_name;
+        while (fin >> temp_name) {
+            name_list->push_back(temp_name);
+        }
+    } else {
         cout << "Error opening file" << endl;
         exit(1);
     }
@@ -252,8 +263,7 @@ int main() {
     
     cout << "STORE OPENS" << endl;
     for (int i = 0; i < 5; i++) {
-        string name;
-        fin >> name;
+        string name = pickRandomName(name_list);
         cout << "\t" << name << " joined the line" << endl;
         store_queue->push_back(name);
         length++;
@@ -280,7 +290,7 @@ int main() {
 
         probability = rand() % 100 + 1;
         if (probability <= 60) {
-            fin >> name;
+            name = pickRandomName(name_list);
             cout << "\t" << name;
             cout << " joined the line" << endl;
             store_queue->push_back(name);
@@ -312,7 +322,7 @@ int main() {
 
         probability = rand() % 100 + 1;
         if (probability <= 10) {
-            fin >> name;
+            name = pickRandomName(name_list);
             cout << "\t" << name; 
             cout << " (VIP) joins the front of the line" << endl;
             store_queue->push_front(name + " (VIP)");
