@@ -1,15 +1,22 @@
 #include <iostream>
+#include <string>
+#include <fstream>
 using namespace std;
 
+// COMSC-210 | Midterm 2 | Ian Kusmiantoro
+
 const int MIN_NR = 10, MAX_NR = 99, MIN_LS = 5, MAX_LS = 20;
+
+// I'm changing all value ints to string, because I'm assuming that
+// The list stores names rather than some random integer which doesn't mean anything
 
 class DoublyLinkedList {
 private:
     struct Node {
-        int data;
+        string data;
         Node* prev;
         Node* next;
-        Node(int val, Node* p = nullptr, Node* n = nullptr) {
+        Node(string val, Node* p = nullptr, Node* n = nullptr) {
             data = val; 
             prev = p;
             next = n;
@@ -22,7 +29,7 @@ private:
 public:
     DoublyLinkedList() { head = nullptr; tail = nullptr; }
 
-    void insert_after(int value, int position) {
+    void insert_after(string value, int position) {
         if (position < 0) {
             cout << "Position must be >= 0." << endl;
             return;
@@ -53,7 +60,7 @@ public:
         temp->next = newNode;
     }
 
-    void delete_val(int value) {
+    void delete_val(string value) {
         if (!head) return;
 
         Node* temp = head;
@@ -113,7 +120,7 @@ public:
         delete temp;
     }
 
-    void push_back(int v) {
+    void push_back(string v) {
         Node* newNode = new Node(v);
         if (!tail)
             head = tail = newNode;
@@ -124,7 +131,7 @@ public:
         }
     }
     
-    void push_front(int v) {
+    void push_front(string v) {
         Node* newNode = new Node(v);
         if (!head)
             head = tail = newNode;
@@ -206,6 +213,28 @@ public:
 int main() {
     cout << MIN_NR + MIN_LS + MAX_NR + MAX_LS;  // dummy statement to avoid compiler warning
 
+    DoublyLinkedList* store_queue = new DoublyLinkedList();
+    ifstream fin;
+
+    fin.open("names.txt");
+
+    // Store Opens
+    
+    for (int i = 0; i < 5; i++) {
+        string name;
+        fin >> name;
+        store_queue->push_back(name);
+    }
+
+    // Next 20 minutes
+
+    for (int i = 0; i < 20; i++) {
+        int probability = rand() % 100 + 1;
+        if (probability <= 40) {
+            store_queue->pop_front();
+        }
+        if (probability)
+    }
     
     return 0;
 }
