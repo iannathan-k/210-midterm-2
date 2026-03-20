@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <ctime>
+#include <vector>
 using namespace std;
 
 // COMSC-210 | Midterm 2 | Ian Kusmiantoro
@@ -242,7 +243,11 @@ int main() {
     const int STARTING_LINE = 5;
     const int START_TIME = 1;
     const int END_TIME = 20;
-    const int 
+    const int SERVED_PROBABILITY = 40;
+    const int JOIN_PROBABILITY = 60;
+    const int RAGE_PROBABILITY = 20;
+    const int LEAVE_PROBABILITY = 10;
+    const int VIP_PROBABILITY = 10;
 
     DoublyLinkedList* store_queue = new DoublyLinkedList();
     ifstream fin;
@@ -287,7 +292,7 @@ int main() {
         int probability;
         
         probability = rand() % MAX_PROBABILITY + 1;
-        if (probability <= 40 && length > 0) {
+        if (probability <= SERVED_PROBABILITY && length > 0) {
             cout << "\t" << store_queue->getNodeDataAt(1);
             cout << " is served" << endl;
             store_queue->pop_front();
@@ -295,7 +300,7 @@ int main() {
         }
 
         probability = rand() % MAX_PROBABILITY + 1;
-        if (probability <= 60) {
+        if (probability <= JOIN_PROBABILITY) {
             name = pickRandomName(name_list);
             cout << "\t" << name;
             cout << " joined the line" << endl;
@@ -304,7 +309,7 @@ int main() {
         }
 
         probability = rand() % MAX_PROBABILITY + 1;
-        if (probability <= 20 && length > 0) {
+        if (probability <= RAGE_PROBABILITY && length > 0) {
             cout << "\t" << store_queue->getNodeDataAt(length);
             cout << " (at the rear) left the line" << endl;
             store_queue->pop_back();
@@ -313,7 +318,7 @@ int main() {
 
         probability = rand() % MAX_PROBABILITY + 1;
         // Bounds checking because nobody can leave if theres nobody in the line
-        if (probability <= 10 && length > 0) {
+        if (probability <= LEAVE_PROBABILITY && length > 0) {
             // This particular requirement is a bit ambiguous, as I don't know whether
             // It's a 10% chance someone leaves, or a 10% chance for each person to leave
             // But I interpret it to be a 10% for a random person to leave
@@ -327,7 +332,7 @@ int main() {
         }
 
         probability = rand() % MAX_PROBABILITY + 1;
-        if (probability <= 10) {
+        if (probability <= VIP_PROBABILITY) {
             name = pickRandomName(name_list);
             cout << "\t" << name; 
             cout << " (VIP) joins the front of the line" << endl;
